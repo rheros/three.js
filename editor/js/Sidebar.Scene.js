@@ -12,17 +12,6 @@ Sidebar.Scene = function ( editor ) {
 
 	// outliner
 
-	function escapeHTML( html ) {
-
-		return html
-			.replace( /&/g, '&amp;' )
-			.replace( /"/g, '&quot;' )
-			.replace( /'/g, '&#39;' )
-			.replace( /</g, '&lt;' )
-			.replace( />/g, '&gt;' );
-
-		}
-
 	function buildOption( object, draggable ) {
 
 		var option = document.createElement( 'div' );
@@ -51,6 +40,17 @@ Sidebar.Scene = function ( editor ) {
 		}
 
 		return material.name;
+
+	}
+
+	function escapeHTML( html ) {
+
+		return html
+			.replace( /&/g, '&amp;' )
+			.replace( /"/g, '&quot;' )
+			.replace( /'/g, '&#39;' )
+			.replace( /</g, '&lt;' )
+			.replace( />/g, '&gt;' );
 
 	}
 
@@ -181,7 +181,7 @@ Sidebar.Scene = function ( editor ) {
 
 	// fog density
 
-	var fogDensity = new UI.Number( 0.05 ).setWidth( '40px' ).setRange( 0, 0.1 ).setPrecision( 3 ).onChange( onFogChanged );
+	var fogDensity = new UI.Number( 0.05 ).setWidth( '40px' ).setRange( 0, 0.1 ).setStep( 0.001 ).setPrecision( 3 ).onChange( onFogChanged );
 	fogPropertiesRow.add( fogDensity );
 
 	//
