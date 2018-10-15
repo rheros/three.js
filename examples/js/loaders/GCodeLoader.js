@@ -23,11 +23,19 @@ THREE.GCodeLoader.prototype.load = function ( url, onLoad, onProgress, onError )
 	var self = this;
 
 	var loader = new THREE.FileLoader( self.manager );
+	loader.setPath( self.path );
 	loader.load( url, function ( text ) {
 
 		onLoad( self.parse( text ) );
 
 	}, onProgress, onError );
+
+};
+
+THREE.GCodeLoader.prototype.setPath = function ( value ) {
+
+	this.path = value;
+	return this;
 
 };
 
@@ -37,8 +45,6 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 	var layers = [];
 
 	var currentLayer = undefined;
-
-	var box = new THREE.Box3();
 
 	var pathMaterial = new THREE.LineBasicMaterial( { color: 0xFF0000 } );
 	pathMaterial.name = 'path';
@@ -74,13 +80,6 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 
 		}
 
-		if ( line.extruding ) {
-
-			box.min.set( Math.min( box.min.x, p2.x ), Math.min( box.min.y, p2.y ), Math.min( box.min.z, p2.z ) );
-			box.max.set( Math.max( box.max.x, p2.x ), Math.max( box.max.y, p2.y ), Math.max( box.max.z, p2.z ) );
-
-		}
-
 	}
 
 	function delta( v1, v2 ) {
@@ -89,13 +88,13 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 
 	}
 
-	function absolute ( v1, v2 ) {
+	function absolute( v1, v2 ) {
 
 		return state.relative ? v1 + v2 : v2;
 
 	}
 
-	var lines = data.replace( /;.+/g,'' ).split( '\n' );
+	var lines = data.replace( /;.+/g, '' ).split( '\n' );
 
 	for ( var i = 0; i < lines.length; i ++ ) {
 
@@ -219,7 +218,7 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 
 	}
 
-	object.rotation.set( - Math.PI / 2, 0, 0 );
+	object.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2, 0, 0 ) );
 
 	return object;
 
